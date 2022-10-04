@@ -1,6 +1,7 @@
 ;;
 ;; Core behaviorial changes
 ;;
+
 ;; Avoid constant errors on Windows about the coding system by setting the default to UTF-8.
 (set-default-coding-systems 'utf-8)
 ;; Enable line numbers
@@ -9,7 +10,7 @@
 (global-hl-line-mode +1)
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-;; ALways can type Y or N
+;; Always can type Y or N
 (defalias 'yes-or-no-p 'y-or-n-p)
 ;; Ability to delete selections
 (delete-selection-mode t)
@@ -21,10 +22,7 @@
 (setq tramp-verbose 10)
 ;; from Andrew Tropin's RDE. This fixes the bug where you can't open files with sudo 
 (eval-when-compile (require 'tramp))
-(with-eval-after-load
-    'tramp
-    (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
-
+(with-eval-after-load 'tramp (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
 ;; "If I edit a file outside of Emacs, the default setting is for Emacs to ask you to reload the file manually. I task Emacs to reload the file automatically."
 (global-auto-revert-mode t)
@@ -32,6 +30,7 @@
 ;;
 ;; Basic visual settings
 ;;
+
 (if (window-system) (set-frame-size (selected-frame) 124 40)) ; Set a default window size
 (setq inhibit-startup-message t)
 (setq inhibit-startup-screen t)
@@ -49,11 +48,11 @@
 
 ;; Initial theme
 (set-face-attribute 'default nil :font "Iosevka SS05 Slab" :height 128)
-;; (load-theme 'tango-dark)
 
 ;;
 ;; Initialize package sources
 ;;
+
 (require 'package)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")
@@ -84,16 +83,17 @@
 ;;
 ;; No Littering
 ;;
+
 ;; Load the feature no-littering as early as possible in your init file. 
 ;; Make sure you load it at least before you change any path variables using some other method.
 (use-package no-littering
-   :ensure t
-   :config
-   ;; One of the most common types of files that Emacs creates automatically is auto-save files. 
-   ;; By default, these appear in the current directory of a visited file. 
-   ;; No-littering does not change this, but you can add the following code to your init.el file to store these files in the var directory:
-   (setq auto-save-file-name-transforms 
-      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+  :ensure t
+  :config
+  ;; One of the most common types of files that Emacs creates automatically is auto-save files. 
+  ;; By default, these appear in the current directory of a visited file. 
+  ;; No-littering does not change this, but you can add the following code to your init.el file to store these files in the var directory:
+  (setq auto-save-file-name-transforms 
+        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
 
 ;; "Emacs likes to strew its backup and temporary files everywhere. Lets give them a home in the temporary file directory."
@@ -105,9 +105,9 @@
 ;;
 ;; Makes startup faster by reducing the frequency of garbage collection
 ;;
+
 ;; Using garbage magic hack.
- (use-package gcmh :config (gcmh-mode 1))
-; Setting garbage collection threshold
+(use-package gcmh :config (gcmh-mode 1)) ;; Setting garbage collection threshold
 (setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
 ;; Profile emacs startup
@@ -127,12 +127,13 @@
 (use-package evil
   :init      ;; tweak evil's configuration before loading it
   (setq evil-undo-system 'undo-fu)
-  (setq evil-want-C-i-jump nil) ; be able to use tab
+  (setq evil-want-C-i-jump nil) ;; be able to use tab
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
   (setq evil-vsplit-window-right t)
   (setq evil-split-window-below t)
   (evil-mode))
+
 ;; Evil Collection is also installed since it adds ‘evil’ bindings to parts of Emacs that the standard Evil package does not cover, such as: calenda, help-mode and ibuffer.
 (use-package evil-collection
   :after evil
@@ -154,7 +155,10 @@
               indent-tabs-mode nil)
 (use-package company :ensure t :hook (after-init . global-company-mode))
 
+;;
 ;; General keybindings
+;;
+
 ;; General.el allows us to set keybindings.  
 ;; SPC as the prefix key.  General makes setting keybindings (especially with SPC) much easier.
 ;; All of the keybindings we set later in the config depend on general being loaded.
@@ -207,15 +211,16 @@
 
 ;; Eval keybindings
 (nvmap :states '(normal visual) :keymaps 'override :prefix "SPC"
-       "e b"   '(eval-buffer :which-key "Eval elisp in buffer")
-       "e d"   '(eval-defun :which-key "Eval defun")
-       "e e"   '(eval-expression :which-key "Eval elisp expression")
-       "e l"   '(eval-last-sexp :which-key "Eval last sexression")
-       "e r"   '(eval-region :which-key "Eval region"))
+  "e b"   '(eval-buffer :which-key "Eval elisp in buffer")
+  "e d"   '(eval-defun :which-key "Eval defun")
+  "e e"   '(eval-expression :which-key "Eval elisp expression")
+  "e l"   '(eval-last-sexp :which-key "Eval last sexression")
+  "e r"   '(eval-region :which-key "Eval region"))
 
 ;;
 ;; Interactions
 ;;
+
 (use-package counsel :after ivy :config (counsel-mode))
 (use-package ivy
   :defer 0.1
@@ -261,7 +266,6 @@
 ;; Pretty graphics
 ;;
 
-;; (use-package monokai-pro-theme :ensure t :config (load-theme 'monokai-pro t))
 (use-package modus-themes
   :ensure
   :init
@@ -272,15 +276,6 @@
   ;; Load the theme of your choice:
   (modus-themes-load-operandi))
 
-;;
-;; NOTE: The first time you load your configuration on a new machine, you'll
-;; need to run the following command interactively so that mode line icons
-;; display correctly:
-;;
-;; M-x all-the-icons-install-fonts
-;; (use-package all-the-icons :if (display-graphic-p))
-;; (use-package doom-modeline :ensure t :init (doom-modeline-mode 1) :custom ((doom-modeline-height 15)))
-
 (use-package smart-mode-line
   :ensure t
   :config
@@ -289,23 +284,6 @@
 (use-package highlight-parentheses :ensure t)
 (add-hook 'prog-mode-hook #'highlight-parentheses-mode)
 (add-hook 'minibuffer-setup-hook #'highlight-parentheses-minibuffer-setup)
-
-;; (use-package emojify :hook (after-init . global-emojify-mode))
-;; (add-hook 'after-init-hook #'global-emojify-mode)
-
-;; (use-package centaur-tabs
-;;   :demand
-;;   :config
-;;   (centaur-tabs-mode t)
-;;   :bind
-;;   ("C-<prior>" . centaur-tabs-backward)
-;;   ("C-<next>" . centaur-tabs-forward))
-;; (centaur-tabs-change-fonts "Iosevka SS05 Slab" 128)
-;; (centaur-tabs-headline-match)
-;; (setq centaur-tabs-style "rounded")
-;; (setq centaur-tabs-height 48)
-;; (setq centaur-tabs-set-bar 'over)
-;; (setq centaur-tabs-set-modified-marker t)
 
 (use-package magit
   :bind ("C-M-;" . magit-status)
